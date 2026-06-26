@@ -14,7 +14,7 @@ func NewTui() *tui {
 	return &tui{}
 }
 
-func (t *tui) decode(fen string) []piece {
+func (t *tui) decode(fen string, moves []int) []piece {
 	var pieces []piece
 	rows := 7
 	col := 8
@@ -76,6 +76,10 @@ func (t *tui) decode(fen string) []piece {
 
 	if rows < 0 {
 		panic(fmt.Sprintf("Unable to decode fen string.\nWrong rows amount.\nfen: %s", fen))
+	}
+
+	for _, m := range moves {
+		pieces[m] = move
 	}
 
 	return pieces

@@ -19,6 +19,10 @@ type board struct {
 	taken   uint64
 	wpieces uint64
 	bpieces uint64
+
+	moves uint64
+	from  uint64
+	to    uint64
 }
 
 func NewBoard() *board {
@@ -44,7 +48,7 @@ func NewBoard() *board {
 
 func (b *board) updatePieces() {
 	b.bpieces = b.bbishop | b.bking | b.bknight | b.bpawn | b.bqueen | b.brook
-	b.wpieces = b.wbishop | b.wking | b.wknight | b.wpawn | b.wqueen | b.brook
+	b.wpieces = b.wbishop | b.wking | b.wknight | b.wpawn | b.wqueen | b.wrook
 
 	b.taken = b.bpieces | b.wpieces
 	b.empty = ^b.taken

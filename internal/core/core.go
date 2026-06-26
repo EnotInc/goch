@@ -16,6 +16,8 @@ const (
 
 	hide_cursor = "\033[?25l"
 	show_cursor = "\033[?25h"
+
+	clearline = "\033[0K"
 )
 
 type core struct {
@@ -40,6 +42,11 @@ func Init() *core {
 	}
 }
 
+const (
+	enter = 13
+	space = 32
+)
+
 func (core *core) Run() {
 	tui := tui.NewTui()
 	b := board.NewBoard()
@@ -50,7 +57,7 @@ func (core *core) Run() {
 
 	// first draw
 	fen := b.ToFen()
-	tui.Draw(fen, c.scalar())
+	tui.Draw(fen, c.scalar(), -1, nil)
 
 	var i = 0
 
@@ -73,11 +80,17 @@ func (core *core) Run() {
 			c.MvRight()
 		case 'q':
 			quit = true
+		case enter, space:
+			b.AddMove(c.scalar())
 		}
 
 		fen := b.ToFen()
 		fmt.Print(reset)
-		tui.Draw(fen, c.scalar())
+		tui.Draw(fen, c.scalar(), b.From(), b.Moves())
+
+		// fmt.Printf("\ncursor\tx: %d\ty: %d", c.row, c.col)
+		// fmt.Printf("\nscalar: %d%s", c.scalar(), clearline)
+		// fmt.Printf("\nfrom: %d", b.From())
 	}
 
 	fmt.Print(show_cursor)

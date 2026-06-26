@@ -18,4 +18,5 @@ const (
 	bpawn   piece = "\033[1m\u265f "
 
 	none piece = "  "
+	move piece = "[]"
 )
