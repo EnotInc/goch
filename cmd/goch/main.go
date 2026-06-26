@@ -1,15 +1,10 @@
 package main
 
 import (
-	board "github.com/EnotInc/goch/internal/board"
-	"github.com/EnotInc/goch/internal/tui"
+	"github.com/EnotInc/goch/internal/core"
 )
 
 func main() {
-	tui := tui.NewTui()
-
-	b := board.NewBoard()
-	fen := b.ToFen()
-
-	tui.Draw(fen)
+	core := core.Init()
+	core.Run()
 }

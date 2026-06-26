@@ -10,21 +10,33 @@ const (
 	black = "\033[42m"
 	white = "\033[43m"
 
-	save    = "\033[s"
-	restore = "\033[u"
-	back    = "\033[1A"
-	clear   = "\033[2K"
+	cur_black = "\033[46m"
+	cur_white = "\033[46m"
 )
 
-func (t *tui) Draw(fen string) {
+func (t *tui) Draw(fen string, cursor int) {
 	var board strings.Builder
 	pieces := t.decode(fen)
 	for row := range 8 {
 		fmt.Fprintf(&board, "%d ", row+1)
 		for col := range 8 {
-			color := black
-			if (row+col)%2 == 0 {
-				color = white
+			var color string
+			pos := row*8 + col
+
+			switch (row+col)%2 == 0 {
+			case false:
+				if cursor == pos {
+					color = cur_black
+				} else {
+					color = black
+				}
+
+			case true:
+				if cursor == pos {
+					color = cur_white
+				} else {
+					color = white
+				}
 			}
 
 			piece := pieces[row*8+col]
