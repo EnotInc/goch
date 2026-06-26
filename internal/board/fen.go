@@ -69,9 +69,11 @@ func (b *board) ToFen() string {
 			fmt.Fprintf(&fen, "%d", empty)
 			fen.WriteByte('/')
 			empty = 0
-		} else if i%8 == 0 && i > 0 {
+		} else if i%8 == 0 {
 			writeEmpty()
-			fen.WriteByte('/')
+			if i > 0 { // not including last '/' symbol
+				fen.WriteByte('/')
+			}
 		}
 	}
 

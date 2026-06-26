@@ -45,6 +45,7 @@ func Init() *core {
 const (
 	enter = 13
 	space = 32
+	esc   = 27
 )
 
 func (core *core) Run() {
@@ -69,7 +70,7 @@ func (core *core) Run() {
 			panic(err)
 		}
 
-		switch key {
+		switch key { // TODO: add arrows support
 		case 'h':
 			c.MvLeft()
 		case 'j':
@@ -82,15 +83,13 @@ func (core *core) Run() {
 			quit = true
 		case enter, space:
 			b.AddMove(c.scalar())
+		case esc:
+			b.Cancel_selection()
 		}
 
 		fen := b.ToFen()
 		fmt.Print(reset)
 		tui.Draw(fen, c.scalar(), b.From(), b.Moves())
-
-		// fmt.Printf("\ncursor\tx: %d\ty: %d", c.row, c.col)
-		// fmt.Printf("\nscalar: %d%s", c.scalar(), clearline)
-		// fmt.Printf("\nfrom: %d", b.From())
 	}
 
 	fmt.Print(show_cursor)

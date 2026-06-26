@@ -23,6 +23,8 @@ type board struct {
 	moves uint64
 	from  uint64
 	to    uint64
+
+	moved_piese piece
 }
 
 func NewBoard() *board {
@@ -40,6 +42,11 @@ func NewBoard() *board {
 		wknight: 0b0000000000000000000000000000000000000000000000000000000001000010,
 		wrook:   0b0000000000000000000000000000000000000000000000000000000010000001,
 		wpawn:   0b0000000000000000000000000000000000000000000000001111111100000000,
+
+		moved_piese: piece{
+			piece_t: nat,
+			side:    none,
+		},
 	}
 	b.updatePieces()
 

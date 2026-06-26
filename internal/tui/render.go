@@ -11,7 +11,7 @@ const (
 	white    = "\033[43m"
 	cursored = "\033[46m"
 
-	selected = "\033[34m"
+	selected = "\033[35m"
 )
 
 func (t *tui) Draw(fen string, cursor int, from int, moves []int) {
