@@ -1,10 +1,15 @@
 package main
 
-import "github.com/EnotInc/goch/internal/tui"
-
-const simplefen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+import (
+	board "github.com/EnotInc/goch/internal/board"
+	"github.com/EnotInc/goch/internal/tui"
+)
 
 func main() {
 	tui := tui.NewTui()
-	tui.Draw(simplefen)
+
+	b := board.NewBoard()
+	fen := b.ToFen()
+
+	tui.Draw(fen)
 }
