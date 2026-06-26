@@ -20,17 +20,14 @@ func (t *tui) Draw(fen string) {
 	var board strings.Builder
 	pieces := t.decode(fen)
 	for row := range 8 {
+		fmt.Fprintf(&board, "%d ", row+1)
 		for col := range 8 {
-			var color string
+			color := black
+			if (row+col)%2 == 0 {
+				color = white
+			}
 
 			piece := pieces[row*8+col]
-
-			switch (row+col)%2 == 0 {
-			case true:
-				color = white
-			case false:
-				color = black
-			}
 
 			board.WriteString(color)
 			board.WriteString(string(piece))
@@ -38,5 +35,6 @@ func (t *tui) Draw(fen string) {
 		}
 		board.WriteByte('\n')
 	}
+	board.WriteString("  a b c d e f g h")
 	fmt.Print(board.String())
 }
