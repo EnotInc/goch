@@ -1,6 +1,6 @@
 package board
 
-func (b *board) AddMove(cursor int) {
+func (b *Board) AddMove(cursor int) {
 	if cursor == -1 {
 		return
 	}
@@ -16,7 +16,7 @@ func (b *board) AddMove(cursor int) {
 
 // build moves board map
 // shows every possible position where piece can go to
-func (b *board) setMoves() {
+func (b *Board) setMoves() {
 	b.updatePieces()
 	b.select_piece()
 	p := b.moved_piese
@@ -55,7 +55,7 @@ func (b *board) setMoves() {
 	b.moves &= ^your_pieces
 }
 
-func (b *board) performMove() {
+func (b *Board) performMove() {
 	if (b.moves&b.to == 0) || (b.from&b.to != 0) {
 		b.Cancel_selection()
 		return
@@ -114,7 +114,7 @@ func (b *board) performMove() {
 	b.updatePieces()
 }
 
-func (b *board) Cancel_selection() {
+func (b *Board) Cancel_selection() {
 	b.from = 0
 	b.to = 0
 	b.moves = 0
@@ -125,7 +125,7 @@ func (b *board) Cancel_selection() {
 
 }
 
-func (b *board) capture() {
+func (b *Board) capture() {
 	// TODO: keep track of captured pieces
 
 	// -==[ black pieces ]==-
@@ -159,7 +159,7 @@ func (b *board) capture() {
 	}
 }
 
-func (b *board) From() int {
+func (b *Board) From() int {
 	for i := range 64 {
 		var mask uint64 = 1 << (63 - i)
 		if mask&b.from != 0 {
@@ -170,7 +170,7 @@ func (b *board) From() int {
 	return -1
 }
 
-func (b *board) Moves() []int {
+func (b *Board) Moves() []int {
 	var moves []int = nil
 	for i := range 64 {
 		var mask uint64 = 1 << (63 - i)

@@ -1,6 +1,6 @@
 package board
 
-type board struct {
+type Board struct {
 	wking   uint64
 	wqueen  uint64
 	wrook   uint64
@@ -27,8 +27,8 @@ type board struct {
 	moved_piese piece
 }
 
-func NewBoard() *board {
-	b := &board{
+func NewBoard() *Board {
+	b := &Board{
 		bking:   0b0000100000000000000000000000000000000000000000000000000000000000,
 		bqueen:  0b0001000000000000000000000000000000000000000000000000000000000000,
 		bbishop: 0b0010010000000000000000000000000000000000000000000000000000000000,
@@ -53,7 +53,7 @@ func NewBoard() *board {
 	return b
 }
 
-func (b *board) updatePieces() {
+func (b *Board) updatePieces() {
 	b.bpieces = b.bbishop | b.bking | b.bknight | b.bpawn | b.bqueen | b.brook
 	b.wpieces = b.wbishop | b.wking | b.wknight | b.wpawn | b.wqueen | b.wrook
 

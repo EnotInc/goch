@@ -4,26 +4,27 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"slices"
 
+	"github.com/EnotInc/goch/internal/ascii"
 	board "github.com/EnotInc/goch/internal/board"
 	"github.com/EnotInc/goch/internal/tui"
 	"golang.org/x/term"
 )
 
 const (
-	save  = "\033[s"
-	reset = "\033[u"
-
 	hide_cursor = "\033[?25l"
 	show_cursor = "\033[?25h"
-
-	clearline = "\033[0K"
 )
 
 type core struct {
-	fdin  int
-	fdout int
-	old   *term.State
+	fdin   int
+	fdout  int
+	old    *term.State
+	board  *board.Board
+	cursor *cursor
+
+	input []rune
 }
 
 func Init() *core {
@@ -35,30 +36,33 @@ func Init() *core {
 		panic(err)
 	}
 
+	c := newCursor()
+	b := board.NewBoard()
 	return &core{
-		fdin:  _fdin,
-		fdout: _fdout,
-		old:   old,
+		fdin:   _fdin,
+		fdout:  _fdout,
+		old:    old,
+		board:  b,
+		cursor: c,
 	}
 }
 
 const (
-	enter = 13
-	space = 32
-	esc   = 27
+	enter     = 13
+	space     = 32
+	esc       = 27
+	backspace = 127
 )
 
 func (core *core) Run() {
 	tui := tui.NewTui()
-	b := board.NewBoard()
-	c := newCursor()
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print(save, hide_cursor)
+	fmt.Print(ascii.Save, hide_cursor)
 
 	// first draw
-	fen := b.ToFen()
-	tui.Draw(fen, c.scalar(), -1, nil)
+	fen := core.board.ToFen()
+	tui.Draw(fen, core.cursor.scalar(), -1, nil)
 
 	var i = 0
 
@@ -70,27 +74,61 @@ func (core *core) Run() {
 			panic(err)
 		}
 
-		switch key { // TODO: add arrows support
-		case 'h':
-			c.MvLeft()
-		case 'j':
-			c.MvDown()
-		case 'k':
-			c.MvUp()
-		case 'l':
-			c.MvRight()
-		case 'q':
-			quit = true
-		case enter, space:
-			b.AddMove(c.scalar())
-		case esc:
-			b.Cancel_selection()
+		if len(core.input) == 0 {
+			quit = core.normal(key)
+		} else {
+			core.command(key)
 		}
 
-		fen := b.ToFen()
-		fmt.Print(reset)
-		tui.Draw(fen, c.scalar(), b.From(), b.Moves())
+		fen := core.board.ToFen()
+		fmt.Print(ascii.Reset)
+		tui.SetCommand(string(core.input))
+		tui.Draw(fen, core.cursor.scalar(), core.board.From(), core.board.Moves())
 	}
 
 	fmt.Print(show_cursor)
+}
+
+func (core *core) normal(key rune) bool {
+	quit := false
+	switch key { // TODO: add arrows support
+	case 'h':
+		core.cursor.MvLeft()
+	case 'j':
+		core.cursor.MvDown()
+	case 'k':
+		core.cursor.MvUp()
+	case 'l':
+		core.cursor.MvRight()
+	case 'q':
+		quit = true
+	case enter, space:
+		core.board.AddMove(core.cursor.scalar())
+	case esc:
+		core.board.Cancel_selection()
+	case ':':
+		core.input = append(core.input, key)
+	}
+
+	return quit
+}
+
+func (core *core) command(key rune) {
+	switch key {
+	case esc:
+		core.input = []rune{}
+	case enter:
+		core.tryParce()
+	case backspace:
+		if len(core.input) > 0 {
+			core.input = core.input[:len(core.input)-1]
+		}
+	default:
+		if len(core.input) > 8 {
+			return
+		}
+		if slices.Contains([]rune("1234567890abdcefghABCDEFGH"), key) {
+			core.input = append(core.input, key)
+		}
+	}
 }

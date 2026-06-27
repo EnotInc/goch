@@ -29,7 +29,7 @@ type piece struct {
 	side    side
 }
 
-func (b *board) select_piece() {
+func (b *Board) select_piece() {
 	p := piece{}
 
 	if b.from&b.bpieces != 0 {

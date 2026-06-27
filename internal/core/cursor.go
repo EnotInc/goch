@@ -44,3 +44,8 @@ func (c *cursor) MvRight() {
 		c.col += 1
 	}
 }
+
+func (c *cursor) SetPos(row, col int) {
+	c.row = row
+	c.col = col
+}

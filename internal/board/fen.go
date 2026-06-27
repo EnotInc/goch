@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func (b *board) ToFen() string {
+func (b *Board) ToFen() string {
 	var fen strings.Builder
 	var empty int = 0
 

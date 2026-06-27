@@ -10,7 +10,7 @@ const (
 	right_border  uint64 = 0b0000000100000001000000010000000100000001000000010000000100000001
 )
 
-func (b *board) generalBorderMask() uint64 {
+func (b *Board) generalBorderMask() uint64 {
 	var mask uint64 = 0b1111111111111111111111111111111111111111111111111111111111111111
 
 	if b.from&left_border != 0 {
@@ -23,7 +23,7 @@ func (b *board) generalBorderMask() uint64 {
 	return mask
 }
 
-func (b *board) knightBorderMask() uint64 {
+func (b *Board) knightBorderMask() uint64 {
 	var mask uint64 = 0b1111111111111111111111111111111111111111111111111111111111111111
 
 	if b.from<<1&left_border != 0 {
@@ -46,7 +46,7 @@ func (b *board) knightBorderMask() uint64 {
 	return mask
 }
 
-func (b *board) pawnMove() {
+func (b *Board) pawnMove() {
 	// TODO: implement en passant
 	// TODO: implement promotion
 	p := b.moved_piese
@@ -69,7 +69,7 @@ func (b *board) pawnMove() {
 
 }
 
-func (b *board) kingMove() {
+func (b *Board) kingMove() {
 	// TODO: implement castling
 	b.moves |= (b.from << 1) & b.generalBorderMask()
 	b.moves |= (b.from >> 1) & b.generalBorderMask()
@@ -81,7 +81,7 @@ func (b *board) kingMove() {
 	b.moves |= (b.from >> 9) & b.generalBorderMask()
 }
 
-func (b *board) knightMove() {
+func (b *Board) knightMove() {
 	b.moves |= (b.from << 17) & b.knightBorderMask()
 	b.moves |= (b.from >> 17) & b.knightBorderMask()
 	b.moves |= (b.from << 15) & b.knightBorderMask()
@@ -92,21 +92,21 @@ func (b *board) knightMove() {
 	b.moves |= (b.from >> 6) & b.knightBorderMask()
 }
 
-func (b *board) rookMove(enemy uint64) {
+func (b *Board) rookMove(enemy uint64) {
 	b.scanPlus(enemy)
 }
 
-func (b *board) bishopMove(enemy uint64) {
+func (b *Board) bishopMove(enemy uint64) {
 	b.scanCross(enemy)
 }
 
-func (b *board) queenMove(enemy uint64) {
+func (b *Board) queenMove(enemy uint64) {
 	b.scanCross(enemy)
 	b.scanPlus(enemy)
 }
 
 // x
-func (b *board) scanCross(enemy uint64) {
+func (b *Board) scanCross(enemy uint64) {
 	const tlbr = 9 // topleft - topright
 	const trbl = 7 // botleft - botright
 
@@ -159,7 +159,7 @@ func (b *board) scanCross(enemy uint64) {
 }
 
 // +
-func (b *board) scanPlus(enemy uint64) {
+func (b *Board) scanPlus(enemy uint64) {
 	const lr = 1 // left - right
 	const ud = 8 // up - down
 

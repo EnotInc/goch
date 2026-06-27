@@ -8,11 +8,22 @@ import (
 type tui struct {
 	board   string
 	message string
+	command string
 }
 
 func NewTui() *tui {
 	return &tui{}
 }
+
+func (t *tui) SetMessage(msg string) {
+	t.message = msg
+}
+
+func (t *tui) SetCommand(cmd string) {
+	t.command = cmd
+}
+
+const red = "\033[31m"
 
 func (t *tui) decode(fen string, moves []int) []piece {
 	var pieces []piece
@@ -79,7 +90,11 @@ func (t *tui) decode(fen string, moves []int) []piece {
 	}
 
 	for _, m := range moves {
-		pieces[m] = move
+		if pieces[m] != none {
+			pieces[m] = piece(red) + pieces[m]
+		} else {
+			pieces[m] = piece(red) + move
+		}
 	}
 
 	return pieces

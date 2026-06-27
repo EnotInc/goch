@@ -3,6 +3,8 @@ package tui
 import (
 	"fmt"
 	"strings"
+
+	"github.com/EnotInc/goch/internal/ascii"
 )
 
 const (
@@ -16,6 +18,7 @@ const (
 
 func (t *tui) Draw(fen string, cursor int, from int, moves []int) {
 	var board strings.Builder
+	board.WriteString(ascii.Reset)
 	pieces := t.decode(fen, moves)
 	for row := range 8 {
 		fmt.Fprintf(&board, "%d ", row+1)
@@ -45,6 +48,16 @@ func (t *tui) Draw(fen string, cursor int, from int, moves []int) {
 		}
 		board.WriteByte('\n')
 	}
-	board.WriteString("  a b c d e f g h")
+	board.WriteString("  a b c d e f g h\n")
+	board.WriteString(ascii.Clearline)
+
+	if len(t.command) > 0 {
+		underline := "\033[4m"
+		overline := "\033[53m"
+		cmd := strings.Split(t.command, ":")
+		fill := strings.Repeat(" ", 16-len(t.command)) // 16 - board width
+		fmt.Fprintf(&board, " %s%s: %s%s", underline, overline, cmd[1], fill)
+	}
+
 	fmt.Print(board.String())
 }
