@@ -3,11 +3,17 @@ package core
 import (
 	"slices"
 	"strconv"
+	"os"
 )
 
 func (core *core) tryParce() {
 	if len(core.input) > 1 {
 		core.input = core.input[1:]
+	}
+
+	if slices.Equal([]rune{'q'}, core.input) {
+		os.Exit(0) // TODO: move to core.exit
+		return
 	}
 
 	if len(core.input) == 2 && slices.Contains([]rune("abcdefghABCDEFGH"), core.input[0]) {

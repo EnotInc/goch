@@ -46,9 +46,9 @@ func (t *tui) Draw(fen string, cursor int, from int, moves []int) {
 			board.WriteString(string(piece))
 			board.WriteString(reset)
 		}
-		board.WriteByte('\n')
+		board.WriteString("\n\r")
 	}
-	board.WriteString("  a b c d e f g h\n")
+	board.WriteString("  a b c d e f g h\n\r")
 	board.WriteString(ascii.Clearline)
 
 	if len(t.command) > 0 {

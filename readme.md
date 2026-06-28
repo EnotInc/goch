@@ -8,10 +8,12 @@ Type `goch` in terminal to run it.
 Movement:
  - hjkl - move cursor left, down, up and right
  - \<space\>\/\<enter\> - select piece or move it
+ - `q` - quit
  - `:` - begin command mode
 
 Commands:
  - `<col><row>` - move cursor at col and row
+ - `q` - quit
  - \<enter\> - run command
  - \<esc\> - quit command mode
 

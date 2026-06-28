@@ -75,8 +75,10 @@ func (core *core) Run() {
 		}
 
 		if len(core.input) == 0 {
+			core.cursor.active = false
 			quit = core.normal(key)
 		} else {
+			core.cursor.active = true
 			core.command(key)
 		}
 
@@ -127,7 +129,7 @@ func (core *core) command(key rune) {
 		if len(core.input) > 8 {
 			return
 		}
-		if slices.Contains([]rune("1234567890abdcefghABCDEFGH"), key) {
+		if slices.Contains([]rune("q1234567890abdcefghABCDEFGH"), key) {
 			core.input = append(core.input, key)
 		}
 	}
