@@ -75,10 +75,8 @@ func (core *core) Run() {
 		}
 
 		if len(core.input) == 0 {
-			core.cursor.active = false
 			quit = core.normal(key)
 		} else {
-			core.cursor.active = true
 			core.command(key)
 		}
 
@@ -110,6 +108,7 @@ func (core *core) normal(key rune) bool {
 		core.board.Cancel_selection()
 	case ':':
 		core.input = append(core.input, key)
+		core.cursor.active = false
 	}
 
 	return quit
@@ -119,8 +118,10 @@ func (core *core) command(key rune) {
 	switch key {
 	case esc:
 		core.input = []rune{}
+		core.cursor.active = true
 	case enter:
 		core.tryParce()
+		core.cursor.active = true
 	case backspace:
 		if len(core.input) > 0 {
 			core.input = core.input[:len(core.input)-1]
