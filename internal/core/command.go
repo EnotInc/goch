@@ -3,7 +3,6 @@ package core
 import (
 	"slices"
 	"strconv"
-	"os"
 )
 
 func (core *core) tryParce() {
@@ -12,7 +11,7 @@ func (core *core) tryParce() {
 	}
 
 	if slices.Equal([]rune{'q'}, core.input) {
-		os.Exit(0) // TODO: move to core.exit
+		core.Exit()
 		return
 	}
 

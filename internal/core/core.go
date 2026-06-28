@@ -66,8 +66,7 @@ func (core *core) Run() {
 
 	var i = 0
 
-	var quit = false
-	for !quit {
+	for {
 		i += 1
 		key, _, err := reader.ReadRune()
 		if err != nil {
@@ -75,7 +74,7 @@ func (core *core) Run() {
 		}
 
 		if len(core.input) == 0 {
-			quit = core.normal(key)
+			core.normal(key)
 		} else {
 			core.command(key)
 		}
@@ -85,12 +84,9 @@ func (core *core) Run() {
 		tui.SetCommand(string(core.input))
 		tui.Draw(fen, core.cursor.scalar(), core.board.From(), core.board.Moves())
 	}
-
-	fmt.Print(show_cursor)
 }
 
-func (core *core) normal(key rune) bool {
-	quit := false
+func (core *core) normal(key rune) {
 	switch key { // TODO: add arrows support
 	case 'h':
 		core.cursor.MvLeft()
@@ -101,7 +97,7 @@ func (core *core) normal(key rune) bool {
 	case 'l':
 		core.cursor.MvRight()
 	case 'q':
-		quit = true
+		core.Exit()
 	case enter, space:
 		core.board.AddMove(core.cursor.scalar())
 	case esc:
@@ -110,8 +106,6 @@ func (core *core) normal(key rune) bool {
 		core.input = append(core.input, key)
 		core.cursor.active = false
 	}
-
-	return quit
 }
 
 func (core *core) command(key rune) {
